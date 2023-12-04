@@ -220,3 +220,75 @@ describe('most blogs', () => {
     expect(listHelper.mostBlogs(listWithMultipleBlogs)).toEqual('Bob Blogger')
   })
 })
+
+describe('most likes', () => {
+
+  const emptyList = []
+
+  const listWithOneBlog = [
+    {
+      _id: '5a422aa71b54a676234d17f8',
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+      likes: 5,
+      __v: 0
+    }
+  ]
+
+  const listWithMultipleBlogs = [
+    {
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      likes: 5,
+    },
+    {
+      title: 'A test blog',
+      author: 'Test author',
+      likes: 17,
+    }
+    ,
+    {
+      title: 'A test blog 2',
+      author: 'Bob Blogger',
+      likes: 4,
+    },
+    {
+      title: 'A test blog 3',
+      author: 'Test author',
+      likes: 25,
+    },
+    {
+      title: 'A test blog',
+      author: 'Test author',
+      likes: 30,
+    },
+    {
+      title: 'Blog about writing tests for blog website',
+      author: 'Bob Blogger',
+      likes: 2,
+    },
+    {
+      title: 'Very good blog',
+      author: 'Bob Blogger',
+      likes: 40,
+    },
+    {
+      title: 'Fourth blog by Bob',
+      author: 'Bob Blogger',
+      likes: 4,
+    }
+  ]
+
+  test('of empty list is null', () => {
+    expect(listHelper.mostLikes(emptyList)).toEqual(null)
+  })
+
+  test('of list with one blog are by its author', () => {
+    expect(listHelper.mostLikes(listWithOneBlog)).toEqual({ author:'Edsger W. Dijkstra', likes:5 })
+  })
+
+  test('of a larger list equals the author with most blogs', () => {
+    expect(listHelper.mostLikes(listWithMultipleBlogs)).toEqual({ author:'Test author', likes:72 })
+  })
+})

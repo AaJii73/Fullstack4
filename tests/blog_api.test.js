@@ -23,6 +23,18 @@ test('6 blogs are returned', async () => {
 })
 
 
+test('the blog posts contain id property', async () => {
+  await api
+    .get('/api/blogs')
+
+  const response = await api.get('/api/blogs')
+  const contents = response.body
+
+  contents.forEach(blog => {
+    expect(blog.id).toBeDefined()
+  })
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })

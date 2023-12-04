@@ -13,19 +13,15 @@ test('blogs are returned as json', async () => {
 })
 
 
-test('6 blogs are returned', async () => {
-  await api
-    .get('/api/blogs')
+test('at least 6 blogs are returned', async () => {
 
   const response = await api.get('/api/blogs')
   const contents = response.body.map(r => r.content)
-  expect(contents).toHaveLength(6)
+  expect(contents.length).toBeGreaterThanOrEqual(6)
 })
 
 
 test('the blog posts contain id property', async () => {
-  await api
-    .get('/api/blogs')
 
   const response = await api.get('/api/blogs')
   const contents = response.body
@@ -33,6 +29,30 @@ test('the blog posts contain id property', async () => {
   contents.forEach(blog => {
     expect(blog.id).toBeDefined()
   })
+})
+
+test('adding a blog increases the number of blogs in the database', async () => {
+
+  const response = await api.get('/api/blogs')
+  const oldLength = response.body.length
+
+  const newBlog = {
+    title: 'new blog',
+    author: 'test author',
+    url: 'testUrl.com',
+    likes: 3
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const newResponse = await api.get('/api/blogs')
+
+  expect(newResponse.body).toHaveLength(oldLength + 1)
+
 })
 
 afterAll(async () => {

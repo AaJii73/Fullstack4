@@ -147,9 +147,50 @@ test('deleting incorrect id does not change database', async () => {
   const newLength = response.body.length
 
   expect(newLength).toEqual(initialLength)
-
 })
 
+test('the information of individual posts can be changed', async () => {
+
+  const id = initialBlogs[0]._id
+
+  const newInformation = {
+    _id: '5a422a851b54a676234d17f7',
+    title: 'React patterns',
+    author: 'Michael Chan',
+    url: 'https://reactpatterns.com/',
+    likes: 15,
+    __v: 0
+  }
+
+  await api
+    .put(`/api/blogs/${id}`)
+    .send(newInformation)
+    .expect(200)
+
+  const response = await api.get(`/api/blogs/${id}`)
+
+  expect(response.body.likes).toEqual(15)
+})
+
+test('trying to update the information of incorrect id returns 400 error', async () => {
+
+  const id = 'incorrectID'
+
+  const newInformation = {
+    _id: '5a422a851b54a676234d17f7',
+    title: 'React patterns',
+    author: 'Michael Chan',
+    url: 'https://reactpatterns.com/',
+    likes: 15,
+    __v: 0
+  }
+
+  await api
+    .put(`/api/blogs/${id}`)
+    .send(newInformation)
+    .expect(400)
+
+})
 
 
 afterAll(async () => {

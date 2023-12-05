@@ -3,12 +3,15 @@ const usersRouter = require('express').Router()
 const User = require('../models/user')
 
 usersRouter.get('/', async (request, response) => {
-  const users = await User.find({})
+  const users = await User
+    .find({}).populate('blogs')
+
   response.json(users)
 })
 
 usersRouter.post('/', async (request, response, next) => {
   const { username, name, password } = request.body
+  const blogs = []
 
   if (username === undefined || username.length < 3) {
     return response.status(400).json({ error: 'username must be at least 3 characters long' })
@@ -27,6 +30,7 @@ usersRouter.post('/', async (request, response, next) => {
       username,
       name,
       passwordHash,
+      blogs
     })
 
     const savedUser = await user.save()
